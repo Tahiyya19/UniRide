@@ -78,18 +78,18 @@ export default function DriverLogin() {
                     {mode === 'signup' && (
                         <div>
                             <label className="block text-xs font-semibold mb-1.5 text-primary">Full Name</label>
-                            <input name="name" required placeholder="e.g. Priya Sharma" className="uni-input" />
+                            <input name="name" required placeholder="e.g. Priya Sharma" className="uni-input" autoComplete="name" />
                         </div>
                     )}
                     <div>
                         <label className="block text-xs font-semibold mb-1.5 text-primary">Email (University Domain)</label>
-                        <input name="email" required placeholder="e.g. priya@university.edu" className="uni-input" />
+                        <input name="email" required placeholder="e.g. priya@university.edu" className="uni-input" autoComplete="email" />
                     </div>
                     {mode === 'signup' && (
                         <>
                             <div>
                                 <label className="block text-xs font-semibold mb-1.5 text-primary">Phone Number</label>
-                                <input name="phone" required type="tel" placeholder="+91 98765 43210" className="uni-input" />
+                                <input name="phone" required type="tel" placeholder="+91 98765 43210" className="uni-input" autoComplete="tel" />
                             </div>
                             <div>
                                 <label className="block text-xs font-semibold mb-2 text-primary">Vehicle Type</label>
@@ -126,7 +126,7 @@ export default function DriverLogin() {
                     <div>
                         <label className="block text-xs font-semibold mb-1.5 text-primary">Password</label>
                         <div className="relative">
-                            <input name="password" required type={showPw ? 'text' : 'password'} placeholder="••••••••" className="uni-input pr-10" />
+                            <input name="password" required type={showPw ? 'text' : 'password'} placeholder="••••••••" className="uni-input pr-10" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} />
                             <button type="button" onClick={() => setShowPw(!showPw)}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary">
                                 {showPw ? <EyeOff size={16} /> : <Eye size={16} />}

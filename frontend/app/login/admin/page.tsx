@@ -35,12 +35,12 @@ export default function AdminLogin() {
                     {error && <p className="text-sm text-safety font-semibold">{error}</p>}
                     <div>
                         <label className="block text-xs font-semibold mb-1.5 text-primary">Username (Email)</label>
-                        <input name="email" required placeholder="admin@university.edu" className="uni-input" />
+                        <input name="email" required placeholder="admin@university.edu" className="uni-input" autoComplete="username" />
                     </div>
                     <div>
                         <label className="block text-xs font-semibold mb-1.5 text-primary">Password</label>
                         <div className="relative">
-                            <input name="password" required type={showPw ? 'text' : 'password'} placeholder="••••••••" className="uni-input pr-10" />
+                            <input name="password" required type={showPw ? 'text' : 'password'} placeholder="••••••••" className="uni-input pr-10" autoComplete="current-password" />
                             <button type="button" onClick={() => setShowPw(!showPw)}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary">
                                 {showPw ? <EyeOff size={16} /> : <Eye size={16} />}

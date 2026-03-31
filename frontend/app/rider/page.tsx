@@ -42,7 +42,7 @@ export default function RiderBookPage() {
     const [driver, setDriver] = useState<MatchedDriver | null>(null);
 
     useEffect(() => {
-        getRideHistory('dummy-rider-id').then(res => setHistory(res || []));
+        getRideHistory().then(res => setHistory(res || []));
     }, []);
 
     const canRequest = pickup.trim() && drop.trim();
@@ -53,7 +53,7 @@ export default function RiderBookPage() {
         const interval = setInterval(() => { d = d.length >= 3 ? '' : d + '.'; setDots(d); }, 500);
         
         try {
-            await requestRide('dummy-rider-id', pickup, drop, rideType);
+            await requestRide(pickup, drop, rideType);
             setTimeout(() => { 
                 clearInterval(interval); 
                 setDriver({

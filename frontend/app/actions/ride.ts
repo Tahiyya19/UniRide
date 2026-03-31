@@ -2,31 +2,15 @@
 
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { getUserId } from '@/lib/auth';
 
-const MOCK_RIDER_ID = 'dummy-rider-id';
-
-async function ensureRiderExists(riderId: string) {
-    const rider = await prisma.user.findUnique({ where: { id: riderId } });
-    if (!rider) {
-        await prisma.user.create({
-            data: {
-                id: riderId,
-                name: 'Campus Rider',
-                email: `${riderId}@university.edu`,
-                role: 'RIDER',
-                campusCoins: 0,
-                co2Saved: 0,
-            },
-        });
-    }
-}
-
-export async function requestRide(riderId: string, pickup: string, drop: string, rideType: string) {
-    await ensureRiderExists(riderId || MOCK_RIDER_ID);
+export async function requestRide(pickup: string, drop: string, rideType: string) {
+    const riderId = await getUserId();
+    if (!riderId) throw new Error("Unauthorized");
 
     const ride = await prisma.ride.create({
         data: {
-            riderId: riderId || MOCK_RIDER_ID,
+            riderId,
             pickup,
             drop,
             distance: 5.0, // Stub
@@ -55,13 +39,13 @@ export async function pollActiveDrivers() {
     }));
 }
 
-export async function getRideHistory(userId: string) {
-    const effectiveRiderId = userId || MOCK_RIDER_ID;
-    await ensureRiderExists(effectiveRiderId);
+export async function getRideHistory() {
+    const riderId = await getUserId();
+    if (!riderId) return [];
 
     return await prisma.ride.findMany({
         where: {
-            riderId: effectiveRiderId
+            riderId
         },
         orderBy: {
             createdAt: 'desc'

@@ -42,6 +42,11 @@ export async function getSession() {
   }
 }
 
+export async function getUserId() {
+    const session = await getSession();
+    return session?.id ?? null;
+}
+
 export async function clearSession() {
   const cookieStore = await cookies();
   cookieStore.delete('uniride_session');
