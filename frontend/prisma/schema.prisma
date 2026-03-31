@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id             String         @id @default(uuid())
+  name           String
+  email          String         @unique
+  passwordHash   String         @default("")
+  role           String         // "RIDER" | "DRIVER" | "ADMIN"
+  isVerified     Boolean        @default(false)
+  driverLicenseUrl String?
+  insuranceDocumentUrl String?
+  campusCoins    Int            @default(0)
+  co2Saved       Float          @default(0.0) // In kg
+  createdAt      DateTime       @default(now())
+  
+  // Relations
+  ridesAsRider   Ride[]         @relation("RiderRelation")
+  ridesAsDriver  Ride[]         @relation("DriverRelation")
+  vehicle        Vehicle?
+  rewards        RewardClaim[]
+  subscription   Subscription?
+}
+
+model Vehicle {
+  id          String   @id @default(uuid())
+  name        String
+  plate       String
+  type        String   // "2-Wheeler" | "4-Wheeler"
+  capacity    Int
+  driverId    String   @unique
+  driver      User     @relation(fields: [driverId], references: [id])
+}
+
+model Ride {
+  id          String   @id @default(uuid())
+  riderId     String
+  driverId    String?
+  pickup      String
+  drop        String
+  distance    Float
+  fare        Float
+  status      String   // "PENDING" | "ACCEPTED" | "COMPLETED" | "CANCELLED"
+  createdAt   DateTime @default(now())
+  
+  rider       User     @relation("RiderRelation", fields: [riderId], references: [id])
+  driver      User?    @relation("DriverRelation", fields: [driverId], references: [id])
+}
+
+model RewardClaim {
+  id          String   @id @default(uuid())
+  userId      String
+  rewardName  String
+  cost        Int
+  claimedAt   DateTime @default(now())
+  
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model Subscription {
+  id          String   @id @default(uuid())
+  riderId     String   @unique
+  planName    String
+  price       Float
+  validUntil  DateTime
+  
+  rider       User     @relation(fields: [riderId], references: [id])
+}
